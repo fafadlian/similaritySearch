@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Flight Data Search</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+<body>
+    <div class="container mt-5">
+        <h1>Similarity Search</h1>
+
+        <!-- Date Range Form -->
+        <form id="paramForm">
+            <label for="arrivalDateFrom">Arrival Date From (ISO 8601 format):</label>
+            <input type="datetime-local" id="arrivalDateFrom" name="arrivalDateFrom"><br>
+
+            <label for="arrivalDateTo">Arrival Date To (ISO 8601 format):</label>
+            <input type="datetime-local" id="arrivalDateTo" name="arrivalDateTo"><br>
+
+            <label for="flightNbr">Flight Number:</label>
+            <input type="int" id="flightNbr" name="flightNbr"><br>
+
+            <input type="submit" value="Submit Param">
+        </form>
+
+        <!-- Display Area for Unique Flight IDs -->
+        <div id="uniqueFlightIds">
+            <h3>Unique Flight IDs:</h3>
+            <!-- Unique flight IDs will be displayed here -->
+        </div>
+
+        <!-- Similarity Search Form -->
+        <form id="searchForm">
+            <input type="text" id="firstName" placeholder="First Name">
+            <input type="text" id="surname" placeholder="Surname">
+            <input type="number" id="age" placeholder="Estimated Age">
+            <input type="text" id="iata_o" placeholder="Origin Airport (IATA)">
+            <input type="text" id="iata_d" placeholder="Destination Airport (IATA)">
+            <input type="text" id="city_name" placeholder="Address (City)">
+            <input type="number" name="max_distance" placeholder="Max Distance">
+            <button type="submit">Search</button>
+        </form>
+        
+        <div id="searchResults">
+            <h3>Search Results:</h3>
+            <!-- Search results will be displayed here -->
+        </div>
+
+        <button id="downloadCsv" style="margin-top: 10px;">Download CSV</button>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
