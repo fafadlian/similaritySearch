@@ -28,9 +28,12 @@ class LocDataAccess:
     # Function to get longitude and latitude by city name
     # Assuming city names are unique in this dataset
     def get_airport_lon_lat_by_city(self, city_name):
+        if city_name is None:
+            return None, None  # Or handle the error as appropriate for your application
+        
         airport_data = self.df_airports[self.df_airports['City'].str.lower() == city_name.lower()]
         if not airport_data.empty:
-            # If there are multiple airports in the city, you might want to handle it differently
+            # Assuming you want the first match if there are multiple airports in the city
             return airport_data.iloc[0]['Longitude'], airport_data.iloc[0]['Latitude']
         else:
             return None, None

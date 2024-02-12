@@ -1,0 +1,139 @@
+:root {
+    --primary-color: #2B3E50; /* greyish dark blue */
+    --secondary-color: #F8F9FA;
+    --text-color: #2B3E50; /* a dark grey for text */
+    --nav-background: #ffffff; 
+    --divider-color: #2B3E50; /* Blue-greyish color */
+    /* Define --primary-color-light if needed */
+
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+}
+
+
+
+#sidebar-wrapper {
+    background-color: var(--nav-background);
+    border-right: 1px solid var(--divider-color);
+}
+
+#sidebar {
+    background-color: var(--nav-background);
+    border-right: 2px solid var(--divider-color); /* Adjust the thickness as needed */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px; /* Adjust width as needed */
+    height: 100vh;
+    padding: 1rem;
+}
+
+body {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+}
+
+.site-header, .site-footer {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.text-primary-custom {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(43, 62, 80, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-color);
+    z-index: 1050;
+}
+
+input, button, .btn {
+    border: 1px solid var(--primary-color);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+input::placeholder {
+    color: var(--primary-color);
+    opacity: 0.7;
+}
+
+input:focus, button:focus {
+    /* Adjust with a specific lighter color or use a preprocessor */
+    outline: none;
+}
+
+button:hover, .btn:hover {
+    /* Adjust with a specific lighter color or use a preprocessor */
+    color: var(--secondary-color);
+}
+
+.vertical-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: var(--nav-background);
+    padding: 1rem;
+}
+
+.navbar-brand {
+    display: flex;
+    justify-content: center; /* Center logo horizontally */
+    align-items: center; /* Center logo vertically, if necessary */
+    width: 100%; /* Ensure the link takes up the full width of the sidebar */
+    margin-bottom: 1rem;
+}
+
+.navbar-brand img {
+    max-height: 120px; /* Increase as necessary, but keep it within sidebar dimensions */
+    max-width: 100%; /* Ensure the image does not exceed the sidebar's width */
+    margin: 0 auto; /* Center the image within the .navbar-brand */
+}
+
+.nav-link {
+    color: var(--primary-color); /* or var(--secondary-color) based on your preference */
+    text-decoration: none;
+    padding: 0.5rem 0;
+    font-weight: bold;
+    display: flex;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-link-container {
+    padding-top: 0rem; /* Reduced from 1rem */
+}
+
+.nav-link:hover {
+    /* Define or adjust --primary-color-light or use a specific color */
+    border-radius: 0.25rem;
+}
+
+.nav-link.active {
+    background-color: var(--primary-color); /* Example background color */
+    color: white; /* Example text color */
+    transition: background-color 0.3s ease-in-out
+}
+
+@media (max-width: 768px) {
+    .navbar-collapse {
+        background-color: var(--primary-color);
+    }
+    .navbar-nav .nav-link {
+        color: var(--secondary-color);
+    }
+}
