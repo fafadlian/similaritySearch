@@ -19,18 +19,6 @@
         <span> loading...</span>
     </div>
 
-    <!-- <header class="site-header">
-        <div class="vertical-nav" id="sidebar">
-            <a class="navbar-brand" href="#">
-                <img src="assets/pictures/TenacityLogo.jpeg" alt="Logo" style="max-height: 100px;">
-            </a>
-            <div class="nav-link-container">
-                <a class="nav-link" href="#similaritySearch">Similarity Search</a>
-                <a class="nav-link" href="#anomalyDetection">Anomaly Detection</a>
-            </div>
-        </div>
-    </header> -->
-
     <aside id="sidebar" class="vertical-nav">
         <div class="sidebar-header">
             <a class="navbar-brand" href="#">
@@ -38,8 +26,8 @@
             </a>
         </div>
         <nav class="nav-link-container">
-            <a class="nav-link" href="#similaritySearchSection"><i class="fas fa-search"></i> Similarity Search</a>
-            <a class="nav-link" href="#anomalyDetectionSection"><i class="fas fa-exclamation-triangle"></i> Anomaly Detection</a>
+            <a class="nav-link" href="#similaritySearchSection"><i class="fas fa-search"></i>   Similarity Search</a>
+            <a class="nav-link" href="#anomalyDetectionSection"><i class="fas fa-exclamation-triangle"></i>   Anomaly Detection</a>
             <!-- Add additional navigation links here if necessary -->
         </nav>
     </aside>
@@ -48,44 +36,186 @@
         <section id="similaritySearchSection" style="display:block;">
             <h1 class="text-primary-custom"><i class="fas fa-search"></i> Similarity Search</h1>
 
-            <!-- Date Range Form -->
-            <form id="paramForm">
-                <label for="arrivalDateFrom">Arrival Date From (ISO 8601 format):</label>
-                <input type="datetime-local" id="arrivalDateFrom" name="arrivalDateFrom"><br>
 
-                <label for="arrivalDateTo">Arrival Date To (ISO 8601 format):</label>
-                <input type="datetime-local" id="arrivalDateTo" name="arrivalDateTo"><br>
+            <div class="card mb-4">
+                <div class="card-header">
+                  <h2>Flight Data Parameters</h2>
+                </div>
+                <div class="card-body">
+                    <form id="paramForm" class="container">
+                        <div class="form-row align-items-center mb-3">
+                            <div class="col-md-4">Arrival Date From (ISO 8601 format):</div>
+                            <div class="col-md-4 text-secondary">Datetime</div>
+                            <div class="col-md-4"><input type="datetime-local" id="arrivalDateFrom" name="arrivalDateFrom" class="form-control"></div>
+                          </div>
+        
+                          <div class="form-row align-items-center mb-3">
+                            <div class="col-md-4">Arrival Date To (ISO 8601 format):</div>
+                            <div class="col-md-4 text-secondary">Datetime</div>
+                            <div class="col-md-4"><input type="datetime-local" id="arrivalDateTo" name="arrivalDateTo" class="form-control"></div>
+                          </div>
 
-                <label for="flightNbr">Flight Number:</label>
-                <input type="int" id="flightNbr" name="flightNbr"><br>
-
-                <input type="submit" value="Submit Param">
-            </form>
-
-            <!-- Display Area for Unique Flight IDs -->
-            <div id="uniqueFlightIds">
-                <h3>Unique Flight IDs:</h3>
-                <!-- Unique flight IDs will be displayed here -->
+                          <div class="form-row align-items-center mb-3">
+                            <div class="col-md-4">Flight Number:</div>
+                            <div class="col-md-4 text-secondary">Number</div>
+                            <div class="col-md-4"><input type="int" id="flightNbr" name="flightNbr" placeholder="Flight Number" class="form-control"></div>
+                          </div>
+        
+                          <div class="form-row justify-content-end">
+                            <div class="col-md-4"><input type="submit" value="Submit Param" class="btn btn-primary"></div>
+                          </div>
+                        <!-- Repeat for other fields -->
+                    </form>
+                </div>
+                <div class="card-footer">
+                  <div id="uniqueFlightIds">
+                    <h3>Unique Flight IDs:</h3>
+                    <!-- Unique flight IDs will be displayed here -->
+                  </div>
+                </div>
             </div>
 
-            <!-- Similarity Search Form -->
-            <form id="searchForm">
-                <input type="text" id="firstName" placeholder="First Name">
-                <input type="text" id="surname" placeholder="Surname">
-                <input type="number" id="age" placeholder="Estimated Age">
-                <input type="text" id="iata_o" placeholder="Origin Airport (IATA)">
-                <input type="text" id="iata_d" placeholder="Destination Airport (IATA)">
-                <input type="text" id="city_name" placeholder="Address (City)">
-                <input type="number" name="max_distance" placeholder="Max Distance">
-                <button type="submit">Search</button>
-            </form>
+            <!-- Similarity Search Section -->
+            <div class="card">
+                <div class="card-header">
+                <h2>Similarity Search</h2>
+                </div>
+                <div class="card-body">
+                <!-- Similarity Search Form -->
+                <!-- <form id="searchForm" class="container mt-3">
+                    <div class="row">
+                        <div class="col-md-3"><strong>Description</strong></div>
+                        <div class="col-md-1"><strong>Type</strong></div>
+                        <div class="col-md-4"><strong>Value</strong></div>
+                        <div class="col-md-3"><strong>Threshold Value</strong></div>
+                    </div> -->
+                    <!-- First Name -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-3">First Name:</div>
+                    <div class="col-md-1 text-secondary">Text</div>
+                    <div class="col-md-4"><input type="text" id="firstName" placeholder="First Name" class="form-control"></div>
+                    <div class="col-md-3"><input type="number" id="firstNameThreshold" placeholder="Threshold" class="form-control"></div>
+                    </div> -->
+                
+                    <!-- Surname -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-3">Surname:</div>
+                    <div class="col-md-1 text-secondary">Text</div>
+                    <div class="col-md-4"><input type="text" id="surname" placeholder="Surname" class="form-control"></div>
+                    <div class="col-md-3"><input type="number" id="SurNameThreshold" placeholder="Threshold" class="form-control"></div>
+
+                    </div> -->
+                
+                    <!-- Age -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-4">Estimated Age:</div>
+                    <div class="col-md-4 text-secondary">Number</div>
+                    <div class="col-md-4"><input type="number" id="age" placeholder="Estimated Age" class="form-control"></div>
+                    </div> -->
+                
+                    <!-- Origin Airport (IATA) -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-4">Origin Airport (IATA):</div>
+                    <div class="col-md-4 text-secondary">Text</div>
+                    <div class="col-md-4"><input type="text" id="iata_o" placeholder="Origin Airport (IATA)" class="form-control"></div>
+                    </div> -->
+                
+                    <!-- Destination Airport (IATA) -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-4">Destination Airport (IATA):</div>
+                    <div class="col-md-4 text-secondary">Text</div>
+                    <div class="col-md-4"><input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control"></div>
+                    </div> -->
+                
+                    <!-- Address (City) -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-4">Address (City):</div>
+                    <div class="col-md-4 text-secondary">Text</div>
+                    <div class="col-md-4"><input type="text" id="city_name" placeholder="Address (City)" class="form-control"></div>
+                    <div class="col-md-4"><input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control"></div>
+
+                    </div> -->
+                
+                    <!-- Max Distance -->
+                    <!-- <div class="form-row align-items-center mb-3">
+                    <div class="col-md-4">Max Distance:</div>
+                    <div class="col-md-4 text-secondary">Number</div>
+                    <div class="col-md-4"><input type="number" name="max_distance" placeholder="Max Distance" class="form-control"></div>
+                    </div> -->
+                
+                    <!-- Submit Button -->
+                    <!-- <div class="form-row justify-content-end">
+                    <div class="col-md-4"><button type="submit" class="btn btn-primary">Search</button></div>
+                    </div>
+                </form> -->
+
+                <form id="searchForm" class="container mt-3">
+                    <!-- Group 1: Name with one threshold -->
+                    <div class="row">
+                        <div class="col-md-3"><strong>Description</strong></div>
+                        <div class="col-md-6"><strong>Value</strong></div>
+                        <div class="col-md-3"><strong>Threshold Value</strong></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">Passenger Name:</div>
+                        <div class="col-md-6">
+                            <input type="text" id="firstName" placeholder="First Name" class="form-control mb-2">
+                            <input type="text" id="surname" placeholder="Surname" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="int" id="nameThreshold" placeholder="Name Threshold" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <!-- Group 2: Age with its own threshold -->
+                    <div class="row mb-2">
+                        <div class="col-md-3">Estimated Age:</div>
+                        <div class="col-md-6">
+                            <input type="number" id="age" placeholder="Estimated Age" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="int" id="ageThreshold" placeholder="Age Threshold" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <!-- Group 3: Locations with one threshold -->
+                    <div class="row mb-2">
+                        <div class="col-md-3">Known Locations:</div>
+                        <div class="col-md-6">
+                            <input type="text" id="iata_o" placeholder="Origin Airport (IATA)" class="form-control mb-2">
+                            <input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control mb-2">
+                            <input type="text" id="city_name" placeholder="Address (City)" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="int" id="locationThreshold" placeholder="Location Threshold" class="form-control">
+                            <small class="form-text text-muted">
+                                Threshold value where 100 means exact similarity, and lower values indicate less similarity.
+                            </small>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="row justify-content-end">
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                </div>
+                <div class="card-footer">
+                <div id="searchResults">
+                    <h3>Search Results:</h3>
+                    <!-- Search results will be displayed here -->
+                </div>
+                </div>
+            </div>
+
             
-            <div id="searchResults">
-                <h3>Search Results:</h3>
-                <!-- Search results will be displayed here -->
-            </div>
-
-            <button id="downloadCsv" style="margin-top: 10px;">Download CSV</button>
+            <button id="downloadCsv" style="margin-top: 10px;" class="btn btn-primary">Download CSV</button>
+            <button id="downloadXml" style="margin-top: 10px;" class="btn btn-primary">Download XML</button>
         </section>
         <section id="anomalyDetectionSection" style="display:none;">
 

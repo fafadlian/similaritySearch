@@ -9,12 +9,12 @@ import pandas as pd
 
 
 
-def find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir):
+def find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir, nameThreshold, ageThreshold, locationThreshold):
     airport_data_access = LocDataAccess.get_instance()  # Access the singleton instance
     all_data = []
     name_comb = firstname+" "+surname
     # List all XML files in the directory
-    print("name_comb: ", name_comb, " name: ,", name)
+    # print("name_comb: ", name_comb, " name: ,", name)
     xml_files = glob.glob(os.path.join(xml_dir, '*.xml'))
 
     # Parse each XML file and aggregate data
@@ -26,14 +26,12 @@ def find_similar_passengers(airport_data_access, firstname, surname, name, age, 
     lon_o, lat_o = airport_data_access.get_airport_lon_lat_by_iata(iata_o)
     lon_d, lat_d = airport_data_access.get_airport_lon_lat_by_iata(iata_d)
     lon_c, lat_c = airport_data_access.get_airport_lon_lat_by_city(city_name)
-    similar_passengers = perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c,  all_data)
+    similar_passengers = perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c,  all_data, nameThreshold, ageThreshold, locationThreshold)
 
     return similar_passengers
 
 
-def perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c, data):
-    threshold = 70  # Define a similarity threshold for names
-    location_threshold = 100  # Define a threshold for geographical distance (e.g., 100 km)
+def perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c, data, nameThreshold, ageThreshold, locationThreshold):
     similar_items = []
     max_distance = 20037.5
     for item in data:
@@ -45,7 +43,7 @@ def perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, 
         DOB = item[9]
 
         # Calculate name similarity
-        print("query name: ", name, "// db name: ", full_name)
+        # print("query name: ", name, "// db name: ", full_name)
         name_similarity_score = fuzz.ratio(name.lower(), full_name.lower())
 
         # Calculate geographical similarities
@@ -65,8 +63,12 @@ def perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, 
 
 
         # Check if all criteria are met
-        if name_similarity_score >= threshold:
-            similar_items.append(item + (name_similarity_score, origin_distance, destination_distance, city_distance, ageDistance, compound_similarity))
+        if name_similarity_score >= int(nameThreshold):
+            if origin_distance >= int(locationThreshold):
+                if destination_distance >= int(locationThreshold):
+                    if city_distance >= int(locationThreshold):
+                        if ageDistance >= int(ageThreshold):
+                            similar_items.append(item + (name_similarity_score, origin_distance, destination_distance, city_distance, ageDistance, compound_similarity))
 
 
     no_similar = len(similar_items)

@@ -85,6 +85,9 @@ def handle_similarity_search():
     iata_d = query_data.get('iata_d')
     city_name = query_data.get('city_name')
     name = query_data.get('name') 
+    nameThreshold = query_data.get('nameThreshold')
+    ageThreshold = query_data.get('ageThreshold')
+    locationThreshold = query_data.get('locationThreshold')
     if age is not None:
         try:
             age = int(age)
@@ -95,7 +98,7 @@ def handle_similarity_search():
         pass
 
     # Pass the airport data access instance to your service function if needed
-    data, no_similar = find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir)
+    data, no_similar = find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir, nameThreshold, ageThreshold, locationThreshold)
     response = {
         'data': data,
         'no_similar' : no_similar

@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var iata_o = document.getElementById('iata_o').value;
         var iata_d = document.getElementById('iata_d').value;
         var city_name = document.getElementById('city_name').value;
+        var nameThreshold = document.getElementById('nameThreshold').value;
+        var ageThreshold = document.getElementById('nameThreshold').value;
+        var locationThreshold = document.getElementById('nameThreshold').value;
 
         var query = {
             firstName: firstName,
@@ -55,7 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
             iata_o: iata_o,
             iata_d: iata_d,
             city_name: city_name,
-            name: name
+            name: name,
+            nameThreshold: nameThreshold,
+            ageThreshold: ageThreshold,
+            locationThreshold: locationThreshold
         };
 
         lastSearchQuery = query;
@@ -135,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var globalResponseData = [];  // Global variable to store the response data
 
+    // Old Version
     // function displayResults(response) {
     //     globalResponseData = response.data;
     //     var resultsDiv = document.getElementById('searchResults');
@@ -147,7 +154,8 @@ document.addEventListener('DOMContentLoaded', function () {
     //     // Add table header
     //     var thead = table.createTHead();
     //     var headerRow = thead.insertRow();
-    //     var headers = ["Similarity Score", "Full Name", "PNR", "Booking ID", "DOB", "Nationality"];
+    //     var headers = ["File Path", "Booking ID", "Full Name", "Origin IATA", "Origin Lat", "Origin Lon", "Destination IATA", "Destination Lat", "Destination Lon", "DOB", "City Name", "City Lat", "City Lon", "Nationality", "Sex", "Name Similarity Score", "Origin Similarity", "Destination Similarity", "Address Similarity", "Age Similariity", "Compund Similarity Score"];
+    //     var headers = ["File Path", "Full Name", "DOB", "City Name", "Nationality"];
     //     headers.forEach(headerText => {
     //         var header = document.createElement("th");
     //         header.textContent = headerText;
@@ -158,44 +166,29 @@ document.addEventListener('DOMContentLoaded', function () {
     //     var tbody = table.createTBody();
     //     response.data.forEach(item => {
     //         var row = tbody.insertRow();
-
-    //         var scoreCell = row.insertCell();
-    //         scoreCell.textContent = item[5]; // Similarity Score
-
-    //         var nameCell = row.insertCell();
-    //         nameCell.textContent = item[1]; // Full Name
     
-    //         var fileCell = row.insertCell();
-    //         fileCell.textContent = item[0]; // File
-    
-    //         var bookingIDCell = row.insertCell();
-    //         bookingIDCell.textContent = item[2]; // Booking ID
-
-    //         var DOBCell = row.insertCell();
-    //         DOBCell.textContent = item[3]; // DOB
-
-    //         var natCell = row.insertCell();
-    //         natCell.textContent = item[4]; // Nationality
-    
-            
+    //         // Assuming the order of values in 'item' matches the columns
+    //         item.forEach((value, index) => {
+    //             var cell = row.insertCell();
+    //             cell.textContent = value; // This will set each value in the order they appear in 'item'
+    //         });
     //     });
     
     //     resultsDiv.appendChild(table);
     // }
 
     function displayResults(response) {
-        globalResponseData = response.data;
         var resultsDiv = document.getElementById('searchResults');
         resultsDiv.innerHTML = ''; // Clear previous results
     
         // Create a table
         var table = document.createElement('table');
-        table.className = 'table'; // If you're using Bootstrap or similar CSS framework
+        table.className = 'table';
     
         // Add table header
         var thead = table.createTHead();
         var headerRow = thead.insertRow();
-        var headers = ["File Path", "Booking ID", "Full Name", "Origin IATA", "Origin Lat", "Origin Lon", "Destination IATA", "Destination Lat", "Destination Lon", "DOB", "City Name", "City Lat", "City Lon", "Nationality", "Sex", "Name Similarity Score", "Origin Similarity", "Destination Similarity", "Address Similarity", "Age Similariity", "Compund Similarity Score"];
+        var headers = ["Compund Similarity Score", "File Path", "Booking ID", "Full Name", "Name Similarity Score", "DOB", "Age Similarity", "Origin IATA", "Origin Similarity", "Destination IATA", "Destination Similarity", "City Name", "Address Similarity"];
         headers.forEach(headerText => {
             var header = document.createElement("th");
             header.textContent = headerText;
@@ -207,10 +200,16 @@ document.addEventListener('DOMContentLoaded', function () {
         response.data.forEach(item => {
             var row = tbody.insertRow();
     
-            // Assuming the order of values in 'item' matches the columns
-            item.forEach((value, index) => {
+            // The indexes of the columns to display, in the desired order
+            [20, 0, 1, 2, 15, 9, 19, 3, 16, 6, 17, 10, 18].forEach(index => {
                 var cell = row.insertCell();
-                cell.textContent = value; // This will set each value in the order they appear in 'item'
+                var value = item[index];
+                
+                // Format float values to two decimal places if it's a float
+                if (!isNaN(value) && value.toString().indexOf('.') !== -1) {
+                    value = parseFloat(value).toFixed(2);
+                }
+                cell.textContent = value;
             });
         });
     
@@ -218,35 +217,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setupNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link-container .nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent the default anchor behavior
-                
-                // Remove 'active' class from all nav links
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                });
-                
-                // Add 'active' class to the clicked link
-                this.classList.add('active');
-                
-                // Hide all sections initially
-                const sections = document.querySelectorAll('main > section');
-                sections.forEach(section => {
-                    section.style.display = 'none'; // Hide all sections
-                });
-                
-                // Extract the target section ID from the href and show the targeted section only
-                const targetSectionId = this.getAttribute('href').substring(1); // Remove the '#' from the href value
-                const targetSection = document.getElementById(targetSectionId);
-                if (targetSection) {
-                    targetSection.style.display = 'block'; // Make the target section visible
-                }
+    const navLinks = document.querySelectorAll('.nav-link-container .nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default anchor behavior
+            
+            // Remove 'active' class from all nav links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
             });
+            
+            // Add 'active' class to the clicked link
+            this.classList.add('active');
+            
+            // Hide all sections initially
+            const sections = document.querySelectorAll('main > section');
+            sections.forEach(section => {
+                section.style.display = 'none'; // Hide all sections
+            });
+            
+            // Extract the target section ID from the href and show the targeted section only
+            const targetSectionId = this.getAttribute('href').substring(1); // Remove the '#' from the href value
+            const targetSection = document.getElementById(targetSectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block'; // Make the target section visible
+            }
         });
-    }
-    
+    });
+}
+
     
     
     
