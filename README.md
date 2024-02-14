@@ -8,10 +8,8 @@ To run this application, ensure you have Docker installed on your machine.
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Build the Docker image:
-	docker build -t similaritysearch .
-4. Run the Docker container:
-	docker run -p 5000:5000 similaritysearch
+3. Build the Docker image: (docker build -t similaritysearch .)
+4. Run the Docker container: (docker run -p 5000:5000 similaritysearch)
 
 
 ## Usage
