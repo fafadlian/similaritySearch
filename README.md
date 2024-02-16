@@ -18,7 +18,8 @@ After starting the application, navigate to `http://localhost:5000` in your web 
 ## Query/Test Cases
 All test case initiated by submitting the PNR Timeframe Parameter (Arrival Date From and Arrival Date To). We're going to use 1 January 2019 to 30 November 2019
 
-1. Test case A
+1. Test case A.
+   
 | Parameter          | Descripotion                                  | Example Values |
 |--------------------|-----------------------------------------------|----------------|
 | First Name         | The first name of the individual to search    | Jamie          |
