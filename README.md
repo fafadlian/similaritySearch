@@ -19,17 +19,17 @@ After starting the application, navigate to `http://localhost:5000` in your web 
 All test case initiated by submitting the PNR Timeframe Parameter (Arrival Date From and Arrival Date To). We're going to use 1 January 2019 to 30 November 2019
 
 1. Test case A
-| Parameter              | Description                                        | Example Value |
-|------------------------|----------------------------------------------------|---------------|
-| Full Name              | The full name of the individual to search.        | John Doe      |
-| DOB                    | Date of birth in YYYY-MM-DD format.                | 1985-08-15    |
-| Origin IATA            | 3-letter IATA code for origin airport.             | JFK           |
-| Destination IATA       | 3-letter IATA code for destination airport.        | LAX           |
-| Name Similarity Score  | Threshold for name similarity (0.0 to 1.0).       | 0.8           |
-| Age Similarity         | Threshold for age similarity (years).             | 5             |
-| Origin Similarity      | Threshold for origin similarity (0.0 to 1.0).     | 0.9           |
-| Destination Similarity | Threshold for destination similarity (0.0 to 1.0). | 0.9           |
-| Address Similarity     | Threshold for address similarity (0.0 to 1.0).    | 0.75          |
+| Parameter          | Descripotion                                  | Example Values |
+|--------------------|-----------------------------------------------|----------------|
+| First Name         | The first name of the individual to search    | Jamie          |
+| Surname            | The surname of the individual to search       | Smith          |
+| Estimated age      | The estimated age of the individual to search | 52             |
+| Origin IATA        | 3-letter IATA code for origin airport         | AUH            |
+| Destination IATA   | 3-letter IATA code for destination airport    | RTM            |
+| City Address       | Name of the city on the person's address      | Abu Dhabi      |
+| Name Threshold     | Threshold for thhe name similarity (0 to 100) | 70             |
+| Age Threshold      | Threshold for age similarity (0 to 100)       | 20             |
+| Location Threshold | Threshold for location (0 to 100)             | 95             |
 
 
 This test case will try to searchy Jaime Smith that travels from Dubai(DXB) to Amsterdam(AMS) with address in Dubai. We use slightly different values in the query for the purpose of showing how the 'fuzzy' similarity search works.
