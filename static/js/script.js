@@ -4,8 +4,23 @@ document.addEventListener('DOMContentLoaded', function () {
     setupNavigation();
 
     //Highlighting Section
+     // Identify the current section here. This is a placeholder example.
+     var currentSection = "similaritySearchSection"; // Change this based on actual logic or URL
 
+     // Remove 'active' class from all nav links first
+     document.querySelectorAll('.nav-link').forEach(function(link) {
+         link.classList.remove('active');
+     });
+ 
+     // Add 'active' class to the current section's nav link
+     if (currentSection === "similaritySearchSection") {
+         document.querySelector('a[href="#similaritySearchSection"]').classList.add('active');
+     } else if (currentSection === "anomalyDetectionSection") {
+         document.querySelector('a[href="#anomalyDetectionSection"]').classList.add('active');
+     }
+     // Extend with more else-if blocks for additional sections as needed
 
+    var lastParam = {};
 
     // Handle Date Range Form Submission
     document.getElementById('paramForm').addEventListener('submit', function (event) {
@@ -30,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', response.message || 'No file name returned');
             }
         });
+
+        lastParam = data;
 
         // Handle the server response
         // ...
@@ -96,6 +113,92 @@ document.addEventListener('DOMContentLoaded', function () {
     
         link.click(); // This will download the data file
     });
+
+    document.getElementById('downloadJson').addEventListener('click', function() {
+        var now = new Date();
+        var dateTimeString = now.toISOString().replace(/[^0-9]/g, ''); // Creates a string in the format 'YYYYMMDDTHHMMSS'
+        var flightParam = lastParam;
+        var searchQuery = lastSearchQuery;
+        var data = globalResponseData;
+        var jsonData = {
+            "PNR_Timeframe": {
+                "arrivalDateFrom": flightParam.arrivalDateFrom, // Example data, replace with actual data
+                "arrivalDateTo": flightParam.arrivalDateTo,
+            },
+            "searchedIndividual": {
+                "FirstName": searchQuery.firstName,
+                "Surname": searchQuery.surname,
+                "EstAge":searchQuery.age,
+                "originIATA":searchQuery.iata_o,
+                "destinationIATA":searchQuery.iata_d,
+                "cityAddress":searchQuery.city_name
+            },
+            "thresholds":{
+                "nameSimilarityThreshold": searchQuery.nameThreshold,
+                "ageSimilarityThreshold": searchQuery.ageThreshold,
+                "location Similarity Threshold": searchQuery.locationThreshold,
+            },
+            "results":{},
+        };
+    
+           // Iterate over each item in the data array and convert it to a JSON object
+        data.forEach(function(item, index) {
+            var resultID = "resultID" + index; // Construct the result ID
+            jsonData.results[resultID] = { // Use the result ID as a key
+                "similarityScores": {
+                    "compoundSimilarity": item[20],
+                    "nameSimilarity": item[15],
+                    "ageSimilarity": item[19],
+                    "originSimilarity": item[16],
+                    "destinationSimilarity": item[17],
+                    "cityDistanceSimilarity": item[18],
+                },
+                "bookInfo": {
+                    "FilePath": item[0],
+                    "bookingID": item[1],
+                    "originIATA": item[3],
+                    "originLat": item[4],
+                    "originLon": item[5],
+                    "destinationIATA": item[6],
+                    "destinationLat": item[7],
+                    "destinationLon": item[8],
+                },
+                "passengerInfo": {
+                    "fullName": item[2],
+                    "DOB": item[9],
+                    "Nationality": item[13],
+                    "Sex": item[14],
+                }
+            };
+        });
+    
+        // Convert the structured data to a JSON string
+        var jsonString = JSON.stringify(jsonData, null, 2); // Beautify the JSON output
+
+        
+        // Generate a file name based on last search query
+        // var fileName = `similar_passengers_${lastSearchQuery.firstName}_${lastSearchQuery.surname}_${lastSearchQuery.iata_o}_${lastSearchQuery.iata_d}`.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '.json';
+        
+        //Generate a file name based on current date time
+        
+        var fileName = `similar_passengers_${dateTimeString}.json`;
+
+        // Create a blob with JSON content
+        var blob = new Blob([jsonString], {type: "application/json"});
+        var url = URL.createObjectURL(blob);
+        
+        // Create a link and trigger the download
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link); // Required for FF
+        
+        link.click(); // This will download the data file
+        
+        // Optionally, remove the link after downloading
+        document.body.removeChild(link);
+    });
+    
     
 
     // Function to send AJAX request to the server
@@ -178,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // }
 
     function displayResults(response) {
+        globalResponseData = response.data
         var resultsDiv = document.getElementById('searchResults');
         resultsDiv.innerHTML = ''; // Clear previous results
     

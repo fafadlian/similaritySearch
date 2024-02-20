@@ -7,7 +7,17 @@
     /* Define --primary-color-light if needed */
 
     --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Spacing */
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 2rem;
+
+    /* Font sizes */
+    --font-size-small: 0.8rem;
+    --font-size-base: 1rem; /* Assume this is your default font size */
+    --font-size-large: 1.2rem;
 }
 
 
@@ -124,16 +134,34 @@ button:hover, .btn:hover {
 }
 
 .nav-link.active {
-    background-color: var(--primary-color); /* Example background color */
-    color: white; /* Example text color */
-    transition: background-color 0.3s ease-in-out
+    background-color: var(--primary-color); /* Use your primary color */
+    color: var(--secondary-color); /* Use your secondary color for the text */
 }
 
-@media (max-width: 768px) {
-    .navbar-collapse {
-        background-color: var(--primary-color);
+@media (max-width: 1580px) {
+    #sidebar {
+        position: relative; /* Change from fixed to relative */
+        width: 100%; /* Full width */
+        height: auto; /* Adjust height automatically */
+        padding: 0.5rem 1rem; /* Adjust padding as needed */
+        border-right: none; /* Remove the border */
+        border-bottom: 2px solid var(--divider-color); /* Add a bottom border if needed */
     }
-    .navbar-nav .nav-link {
-        color: var(--secondary-color);
+
+    .vertical-nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
     }
+
+    .nav-link {
+        padding: 0.5rem; /* Adjust padding for smaller screens */
+        margin: 0 0.5rem; /* Add margin between links */
+    }
+
+    .navbar-brand {
+        margin-bottom: 0; /* Adjust or remove margin as needed */
+    }
+
+    /* Adjust other elements as necessary for smaller screens */
 }
