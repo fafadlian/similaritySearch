@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, render_template
 from loc_access import LocDataAccess
 from datetime import datetime
 import pandas as pd
+from flask_talisman import Talisman
 
 app = Flask(__name__)
 
@@ -106,4 +107,4 @@ def handle_similarity_search():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
