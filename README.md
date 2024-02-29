@@ -9,7 +9,7 @@ To run this application, ensure you have Docker installed on your machine.
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Open app.py, change debug=False to debug=True
-4. Open Dockerfile, change "CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]" to # CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+4. Open Dockerfile, change 'CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]' to # 'CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]'
 5. Build the Docker image: (docker build -t similaritysearch .)
 6. Run the Docker container: (docker run -p 5000:5000 similaritysearch)
 
@@ -18,7 +18,9 @@ To run this application, ensure you have Docker installed on your machine.
 After starting the application, navigate to `http://localhost:5000` in your web browser to access the web interface. Enter your search parameters to begin finding similarities in your data.
 
 ## Query/Test Cases
-All test case initiated by submitting the PNR Timeframe Parameter (Arrival Date From and Arrival Date To). We're going to use 1 January 2019 to 30 November 2019
+All test case initiated by submitting the PNR Timeframe Parameter (Arrival Date From and Arrival Date To). We're going to use 1 January 2019 to 30 November 2019. 
+ALL THE SEARCH PARAMETER NEEDS TO BE FILLED.
+
 
 ### Test Case A
 
@@ -44,7 +46,7 @@ Clue: Since the name of "Mike" often the short version of "Michael", we can use 
 Since we have an almost complete information of his locations, we can use a higher threshold value (99)
 We have the estimated age, we can try to use 80 for the age threshold.
 
-Feel free to adjust the thresholds and see how the threshold affect the output.
+Feel free to adjust the thresholds and see how the threshold affect the output. 
 
 
 
