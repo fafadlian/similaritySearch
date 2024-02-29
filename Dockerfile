@@ -31,5 +31,11 @@ RUN mkdir -p ${STORAGE_PATH_XML}
 ENV FLASK_APP=app.py
 
 # Run app.py when the container launches
+
+#Use this for debug
 # CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
-CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:5000"]
+
+#Use this for Production
+CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]
+
+

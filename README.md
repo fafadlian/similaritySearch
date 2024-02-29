@@ -8,8 +8,10 @@ To run this application, ensure you have Docker installed on your machine.
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Build the Docker image: (docker build -t similaritysearch .)
-4. Run the Docker container: (docker run -p 5000:5000 similaritysearch)
+3. Open app.py, change debug=False to debug=True
+4. Open Dockerfile, change "CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]" to # CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+5. Build the Docker image: (docker build -t similaritysearch .)
+6. Run the Docker container: (docker run -p 5000:5000 similaritysearch)
 
 
 ## Usage

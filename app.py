@@ -108,3 +108,4 @@ def handle_similarity_search():
 
 if __name__ == '__main__':
     app.run(debug=False)
+    #change debug=True for debug
