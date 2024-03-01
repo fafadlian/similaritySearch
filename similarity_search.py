@@ -34,6 +34,7 @@ def find_similar_passengers(airport_data_access, firstname, surname, name, age, 
 def perform_similarity_search(name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c, data, nameThreshold, ageThreshold, locationThreshold):
     similar_items = []
     max_distance = 20037.5
+    print('Threshold: ', name, iata_o, lat_o, lon_o, iata_d, lat_d, lon_d, age, city_name, lat_c, lon_c, data, nameThreshold, ageThreshold, locationThreshold)
     for item in data:
         # Assuming item structure is updated to include lon/lat for origin, destination, city
         full_name = item[2]  # Adjust according to the updated structure

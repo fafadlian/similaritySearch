@@ -6,6 +6,7 @@ from loc_access import LocDataAccess
 from datetime import datetime
 import pandas as pd
 from flask_talisman import Talisman
+import os
 
 app = Flask(__name__)
 
@@ -28,8 +29,7 @@ def submit_param():
         flight_number = data.get('flightNbr')
 
         api_url = 'https://tenacity-rmt.eurodyn.com/api/datalist/flights'
-        access_token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZTU0MTg3NC1iYTNiLTQ5M2EtOGZkYy0xYjgwMGI5YWMxMjYiLCJpYXQiOjE3MDY2MTIwNzMsImV4cCI6MTcwOTI0MTEyOX0.CC4dV7-Te4CzNzS31HrnZpbx3RXm8KwIUs4jC7gU25KJ3VN0YbFTd620Mw14X6sIY-azSm_RigMzpXt3G3Mf5w'
-        # Set the parameters for fetching PNR data based on user input
+        access_token = os.getenv('eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZTU0MTg3NC1iYTNiLTQ5M2EtOGZkYy0xYjgwMGI5YWMxMjYiLCJpYXQiOjE3MDkyODcyNzQsImV4cCI6MTcxMTkxNjMzMH0.WzkMxcwGcjP-fapVl3vQSIoJfI38BBU_guBNqAxhcNae99Y833Bl9OMZftbV3oG4QacgSDX58X_44i8HLvn8cw')
         params = {
             'ft_flight_leg_arrival_date_time_from': arrival_date_from,
             'ft_flight_leg_arrival_date_time_to': arrival_date_to,
@@ -99,6 +99,7 @@ def handle_similarity_search():
         pass
 
     # Pass the airport data access instance to your service function if needed
+    print("Threshold: ", name, nameThreshold, ageThreshold, locationThreshold)
     data, no_similar = find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir, nameThreshold, ageThreshold, locationThreshold)
     response = {
         'data': data,
@@ -107,5 +108,6 @@ def handle_similarity_search():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    # app.run(debug=False)
+    app.run(debug=True, port=5001)
     #change debug=True for debug

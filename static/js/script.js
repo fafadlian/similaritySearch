@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var iata_d = document.getElementById('iata_d').value;
         var city_name = document.getElementById('city_name').value;
         var nameThreshold = document.getElementById('nameThreshold').value;
-        var ageThreshold = document.getElementById('nameThreshold').value;
-        var locationThreshold = document.getElementById('nameThreshold').value;
+        var ageThreshold = document.getElementById('ageThreshold').value;
+        var locationThreshold = document.getElementById('locationThreshold').value;
 
         var query = {
             firstName: firstName,
@@ -82,6 +82,11 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         lastSearchQuery = query;
+
+            // Print the threshold values to the console
+        console.log("Name Threshold: ", nameThreshold);
+        console.log("Age Threshold: ", ageThreshold);
+        console.log("Location Threshold: ", locationThreshold);
     
         sendRequest('/perform_similarity_search', { query: query }, function(response) {
             displayResults(response);
