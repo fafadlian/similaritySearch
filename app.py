@@ -29,7 +29,7 @@ def submit_param():
         flight_number = data.get('flightNbr')
 
         api_url = 'https://tenacity-rmt.eurodyn.com/api/datalist/flights'
-        access_token = os.getenv('eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZTU0MTg3NC1iYTNiLTQ5M2EtOGZkYy0xYjgwMGI5YWMxMjYiLCJpYXQiOjE3MDkyODcyNzQsImV4cCI6MTcxMTkxNjMzMH0.WzkMxcwGcjP-fapVl3vQSIoJfI38BBU_guBNqAxhcNae99Y833Bl9OMZftbV3oG4QacgSDX58X_44i8HLvn8cw')
+        access_token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGI4M2U5OS1mZWE2LTRjMzItYjNlNi1iOWE0ODhlZjE3YjIiLCJpYXQiOjE3MDkyODg4NDksImV4cCI6MTcxMTkxNzkwNX0.O0n_a_ICZFYtaT6zK3fmKlrpmJV8FqbwSSeYSI8KJ5RFh5f5NR-usxzfnoh9yvtd7iwfK1ym6UjYKtf5TDQQiQ'
         params = {
             'ft_flight_leg_arrival_date_time_from': arrival_date_from,
             'ft_flight_leg_arrival_date_time_to': arrival_date_to,
