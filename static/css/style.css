@@ -138,6 +138,11 @@ button:hover, .btn:hover {
     color: var(--secondary-color); /* Use your secondary color for the text */
 }
 
+.select2-container .select2-dropdown .select2-results {
+    max-height: 200px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
 @media (max-width: 1580px) {
     #sidebar {
         position: relative; /* Change from fixed to relative */

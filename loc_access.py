@@ -37,6 +37,30 @@ class LocDataAccess:
             return airport_data.iloc[0]['Longitude'], airport_data.iloc[0]['Latitude']
         else:
             return None, None
+        
+    def get_city_by_airport_iata(self, iata_code):
+        if iata_code in self.df_airports.index:
+            airport_data = self.df_airports.loc[iata_code]
+            return airport_data['City']
+        else:
+            return None
+        
+    def get_country_by_airport_iata(self, iata_code):
+        if iata_code in self.df_airports.index:
+            airport_data = self.df_airports.loc[iata_code]
+            return airport_data['HH_ISO']
+        else:
+            return None
+    
+    def get_country_by_city(self, city_name):
+        if city_name is None:
+            return None
+        airport_data = self.df_airports[self.df_airports['City'].str.lower() == city_name.lower()]
+        if not airport_data.empty:
+            return airport_data.iloc[0]['HH_ISO']
+        else:
+            return None
+        
 
 # Usage elsewhere in your code:
 # airport_data_access = AirportDataAccess.get_instance()

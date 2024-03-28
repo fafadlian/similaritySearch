@@ -19,7 +19,20 @@ def location_similarity_score(lon1, lat1, lon2, lat2, max_distance):
     distance = min(distance, max_distance)
     # Normalize the score such that it is 100 for 0 distance and scales down to 0 as distance reaches max_distance
     score = (1 - (distance / max_distance)) * 100
-    return max(0, score)
+    exp_score = math.exp(-distance/max_distance)
+    score = max(0, score)
+
+    return score, exp_score
+
+def airport_likelihood(is_airport_match, airport_iata, airport_counts):
+    if is_airport_match:
+        # Look up the airport's base rate; default to a small value if not found to avoid division by zero
+        airport_base_rate = airport_counts.get(airport_iata, 0.001)
+        # The rarer the airport, the higher the score. Inverting the base rate serves as a simple proxy.
+        return 1 / airport_base_rate
+    else:
+        # Airport mismatch significantly decreases the likelihood of a match
+        return 0  # Or you might choose a small value to indicate low likelihood
 
 
 

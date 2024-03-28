@@ -72,6 +72,7 @@ def count_flight_ids():
 @app.route('/perform_similarity_search', methods=['POST'])
 def handle_similarity_search():
     airport_data_access = LocDataAccess.get_instance()
+    similar_passengers = pd.DataFrame()
     
     # Now you can use airport_data_access to get airport data
     # Example: lon, lat = airport_data_access.get_airport_lon_lat_by_iata(iata_code)
@@ -79,31 +80,32 @@ def handle_similarity_search():
     query_data = request.json.get('query', {})
     
     # Now you can safely access the nested data
-    firstname = query_data.get('firstName')  # Now this correctly uses .get() on the nested dictionary
+    firstname = query_data.get('firstname')  # Now this correctly uses .get() on the nested dictionary
     surname = query_data.get('surname')
-    age = query_data.get('age')
+    dob = query_data.get('dob')
     iata_o = query_data.get('iata_o')
     iata_d = query_data.get('iata_d')
     city_name = query_data.get('city_name')
-    name = query_data.get('name') 
+    name = query_data.get('name')
+    address = query_data.get('address')
+    sex = query_data.get('sex')
+    nationality = query_data.get('nationality')
     nameThreshold = query_data.get('nameThreshold')
     ageThreshold = query_data.get('ageThreshold')
     locationThreshold = query_data.get('locationThreshold')
-    if age is not None:
-        try:
-            age = int(age)
-        except ValueError:
-            return jsonify({'error': 'Invalid age value'}), 400
-    else:
-    # Handle cases where age is not provided or is None
-        pass
+
 
     # Pass the airport data access instance to your service function if needed
     print("Threshold: ", name, nameThreshold, ageThreshold, locationThreshold)
-    data, no_similar = find_similar_passengers(airport_data_access, firstname, surname, name, age, iata_o, iata_d, city_name, xml_dir, nameThreshold, ageThreshold, locationThreshold)
+    similar_passengers = find_similar_passengers(airport_data_access, firstname, surname, name, dob, iata_o, iata_d, city_name, address, sex, nationality, xml_dir, nameThreshold, ageThreshold, locationThreshold)
+    
+    # Convert the DataFrame to a dictionary for JSON response
+    print("Received query data:", query_data)
+    similar_passengers_json = similar_passengers.to_dict(orient='records')
+    print("Sending response data:", similar_passengers_json)
     response = {
-        'data': data,
-        'no_similar' : no_similar
+        'data': similar_passengers_json,
+        'message': 'Similar passengers found successfully'
     }
     return jsonify(response)
 

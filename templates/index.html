@@ -9,6 +9,10 @@
         <!-- <link href="static/demo.css" rel="stylesheet" media="all" onload="this.media='all'"> -->
         <!-- <link rel="stylesheet" href="static/style2.css">  -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Add these lines in the <head> section of your HTML -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 
     </head>
 <body>
@@ -81,73 +85,6 @@
                 <h2>Similarity Search</h2>
                 </div>
                 <div class="card-body">
-                <!-- Similarity Search Form -->
-                <!-- <form id="searchForm" class="container mt-3">
-                    <div class="row">
-                        <div class="col-md-3"><strong>Description</strong></div>
-                        <div class="col-md-1"><strong>Type</strong></div>
-                        <div class="col-md-4"><strong>Value</strong></div>
-                        <div class="col-md-3"><strong>Threshold Value</strong></div>
-                    </div> -->
-                    <!-- First Name -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-3">First Name:</div>
-                    <div class="col-md-1 text-secondary">Text</div>
-                    <div class="col-md-4"><input type="text" id="firstName" placeholder="First Name" class="form-control"></div>
-                    <div class="col-md-3"><input type="number" id="firstNameThreshold" placeholder="Threshold" class="form-control"></div>
-                    </div> -->
-                
-                    <!-- Surname -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-3">Surname:</div>
-                    <div class="col-md-1 text-secondary">Text</div>
-                    <div class="col-md-4"><input type="text" id="surname" placeholder="Surname" class="form-control"></div>
-                    <div class="col-md-3"><input type="number" id="SurNameThreshold" placeholder="Threshold" class="form-control"></div>
-
-                    </div> -->
-                
-                    <!-- Age -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-4">Estimated Age:</div>
-                    <div class="col-md-4 text-secondary">Number</div>
-                    <div class="col-md-4"><input type="number" id="age" placeholder="Estimated Age" class="form-control"></div>
-                    </div> -->
-                
-                    <!-- Origin Airport (IATA) -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-4">Origin Airport (IATA):</div>
-                    <div class="col-md-4 text-secondary">Text</div>
-                    <div class="col-md-4"><input type="text" id="iata_o" placeholder="Origin Airport (IATA)" class="form-control"></div>
-                    </div> -->
-                
-                    <!-- Destination Airport (IATA) -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-4">Destination Airport (IATA):</div>
-                    <div class="col-md-4 text-secondary">Text</div>
-                    <div class="col-md-4"><input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control"></div>
-                    </div> -->
-                
-                    <!-- Address (City) -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-4">Address (City):</div>
-                    <div class="col-md-4 text-secondary">Text</div>
-                    <div class="col-md-4"><input type="text" id="city_name" placeholder="Address (City)" class="form-control"></div>
-                    <div class="col-md-4"><input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control"></div>
-
-                    </div> -->
-                
-                    <!-- Max Distance -->
-                    <!-- <div class="form-row align-items-center mb-3">
-                    <div class="col-md-4">Max Distance:</div>
-                    <div class="col-md-4 text-secondary">Number</div>
-                    <div class="col-md-4"><input type="number" name="max_distance" placeholder="Max Distance" class="form-control"></div>
-                    </div> -->
-                
-                    <!-- Submit Button -->
-                    <!-- <div class="form-row justify-content-end">
-                    <div class="col-md-4"><button type="submit" class="btn btn-primary">Search</button></div>
-                    </div>
-                </form> -->
 
                 <form id="searchForm" class="container mt-3">
                     <!-- Group 1: Name with one threshold -->
@@ -159,7 +96,7 @@
                     <div class="row mb-2">
                         <div class="col-md-3">Passenger Name:</div>
                         <div class="col-md-6">
-                            <input type="text" id="firstName" placeholder="First Name" class="form-control mb-2">
+                            <input type="text" id="firstname" placeholder="First Name" class="form-control mb-2">
                             <input type="text" id="surname" placeholder="Surname" class="form-control">
                         </div>
                         <div class="col-md-3">
@@ -169,11 +106,10 @@
                     
                     <!-- Group 2: Age with its own threshold -->
                     <div class="row mb-2">
-                        <div class="col-md-3">Estimated Age:</div>
+                        <div class="col-md-3">Known DOB:</div>
                         <div class="col-md-6">
-                            <input type="number" id="age" placeholder="Estimated Age" class="form-control">
-                        </div>
-                        <div class="col-md-3">
+                            <input type="date" id="dob" placeholder="DOB" class="form-control mb-2"> </div>
+                            <div class="col-md-3">
                             <input type="int" id="ageThreshold" placeholder="Age Threshold" class="form-control">
                         </div>
                     </div>
@@ -184,13 +120,29 @@
                         <div class="col-md-6">
                             <input type="text" id="iata_o" placeholder="Origin Airport (IATA)" class="form-control mb-2">
                             <input type="text" id="iata_d" placeholder="Destination Airport (IATA)" class="form-control mb-2">
-                            <input type="text" id="city_name" placeholder="Address (City)" class="form-control">
+                            <input type="text" id="city_name" placeholder="Address (City)" class="form-control mb-2">
+                            <input type="text" id="address" placeholder="Address" class="form-control">
                         </div>
                         <div class="col-md-3">
                             <input type="int" id="locationThreshold" placeholder="Location Threshold" class="form-control">
                             <small class="form-text text-muted">
                                 Threshold value where 100 means exact similarity, and lower values indicate less similarity.
                             </small>
+                        </div>
+                        
+                    </div>
+                    <!-- Group 3: Other Information -->
+                    <div class="row mb-2">
+                        <div class="col-md-3">Other Information:</div>
+                        <div class="col-md-6">
+                            <select id="sex" class="form-control mb-2">
+                                <option value="">Select Sex</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                            <select id="nationality" class="form-control mb-2">
+                                <!-- Add more options as needed -->
+                            </select>
                         </div>
                         
                     </div>
@@ -236,6 +188,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- <script src="{{ url_for('static', filename='js/debugSectionScript.js') }}"></script> -->
 
     
