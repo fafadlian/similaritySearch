@@ -1,0 +1,9 @@
+# Ignore all .env files
+.env*
+*.pyc
+
+# Ignore specific files
+.DS_Store
+Thumbs.db
+
+# Ignore directories
