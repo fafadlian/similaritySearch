@@ -62,7 +62,7 @@ def perform_similarity_search(firstname, surname, name, iata_o, lat_o, lon_o, ci
     max_distance = 20037.5
     similarity_df = pd.DataFrame()
     num_records = df.shape[0]
-    model_path = 'None_xgboost_model.joblib'
+    model_path = 'model/None_xgboost_model.joblib'
     df.reset_index(inplace=True)
     df.rename(columns={'index': 'unique_id'}, inplace=True)
 
@@ -133,7 +133,7 @@ def perform_similarity_search(firstname, surname, name, iata_o, lat_o, lon_o, ci
                         (result_df['SNSimilarity'] >= nameThreshold) &
                         (result_df['AgeSimilarity'] >= ageThreshold)
                         ]
-    filtered_result_df.to_csv('test/filtered_resilt_df.csv')
+    # filtered_result_df.to_csv('test/filtered_resilt_df.csv')
     filtered_result_df.sort_values(by = ['predictions'], ascending = False, inplace = True)
     return filtered_result_df
 
