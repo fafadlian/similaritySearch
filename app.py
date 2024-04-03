@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, render_template
 from loc_access import LocDataAccess
 from datetime import datetime
 import pandas as pd
+import numpy as np
 from flask_talisman import Talisman
 import os
 
@@ -97,17 +98,20 @@ def handle_similarity_search():
 
     # Pass the airport data access instance to your service function if needed
     print("Threshold: ", name, nameThreshold, ageThreshold, locationThreshold)
+    # Your existing code to find similar passengers
     similar_passengers = find_similar_passengers(airport_data_access, firstname, surname, name, dob, iata_o, iata_d, city_name, address, sex, nationality, xml_dir, nameThreshold, ageThreshold, locationThreshold)
-    
-    # Convert the DataFrame to a dictionary for JSON response
-    print("Received query data:", query_data)
+
+    # Replace np.inf and -np.inf with np.nan in the DataFrame, then convert to a dictionary for JSON response
+    similar_passengers.replace([np.inf, -np.inf], np.nan, inplace=True)
+    similar_passengers_json = similar_passengers.where(pd.notnull(similar_passengers), None).to_dict(orient='records')
     similar_passengers_json = similar_passengers.to_dict(orient='records')
-    print("Sending response data:", similar_passengers_json)
-    response = {
-        'data': similar_passengers_json,
-        'message': 'Similar passengers found successfully'
+    response_data = {
+    'data': similar_passengers_json,
+    'message': 'Similar passengers found successfully'
     }
-    return jsonify(response)
+    # Creating the JSON response with Flask's jsonify
+    response = jsonify(response_data)
+    return response
 
 if __name__ == '__main__':
     # app.run(debug=False)

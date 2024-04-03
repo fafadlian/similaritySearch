@@ -4,26 +4,31 @@ import pandas as pd
 import numpy as np
 
 def count_likelihood2(type, counter, num_records):
-    # Ensure data_count is a dictionary
-    # if not isinstance(counter, dict):
-    #     raise ValueError("data_count must be a dictionary.")
+    """
+    Calculates the likelihood based on counts from the counter, with internal defaults for unseen categories.
 
-    # Get the likelihood of 'type', defaulting to 0 if not found
-    type_ll = counter.get(type, 0)
-    prob1 = float('inf') if type_ll == 0 else 1 / (type_ll * num_records)
+    :param type: The category to look up.
+    :param counter: A collection with counts of each category.
+    :param num_records: The total number of records.
+    :return: A pandas Series containing the rarity and probability.
+    """
+    # Default values for unseen categories
+    default_rarity = 1.0  # Adjust as needed, e.g., for very rare categories
+    default_prob = 0.0  # or some other sensible default for your use case
 
-    try:
-        # Handle division by zero if 'type' is not found or has a count of 0
-        if type_ll == 0:
-            raise ValueError(f"The specified type '{type}' was not found or has zero occurrences in the data.")
-        return pd.Series([type_ll, prob1])
-    except ZeroDivisionError:
-        print("Division by zero encountered. This is likely due to the specified type not being present in the data or having zero occurrences.")
-        return pd.Series([None, None])
-    except Exception as e:
-        # Handle any other unexpected errors
-        print(f"An unexpected error occurred: {e}")
-        return pd.Series([None, None])
+    # Get the count of 'type', defaulting to 0 if not found
+    type_count = counter.get(type.lower(), 0)
+    
+    # Calculate rarity and probability
+    if type_count > 0 and num_records > 0:
+        rarity = type_count / num_records
+        prob = 1 / (type_count + 1)  # Adding 1 for Laplace smoothing to avoid division by zero
+    else:
+        rarity = default_rarity
+        prob = default_prob
+
+    return pd.Series([rarity, prob])
+
     
 def string_similarity(string1, string2, string_counts, num_records):
     # Ensure input strings are valid
@@ -50,8 +55,8 @@ def string_similarity(string1, string2, string_counts, num_records):
         str1_ll = string_counts.get(string1.lower(), 0)
         str2_ll = string_counts.get(string2.lower(), 0)
         
-        str1_ll_inverse = float('inf') if str1_ll == 0 else 1 / str1_ll
-        str2_ll_inverse = float('inf') if str2_ll == 0 else 1 / str2_ll
+        str1_ll_inverse = 1 if str1_ll == 0 else 1 / str1_ll
+        str2_ll_inverse = 1 if str2_ll == 0 else 1 / str2_ll
     except ZeroDivisionError:
         print("Division by zero encountered in likelihood calculation.")
     except Exception as e:
@@ -59,10 +64,10 @@ def string_similarity(string1, string2, string_counts, num_records):
     
     # Calculate probabilities, handling division by zero explicitly
     try:
-        prob1 = float('inf') if str1_ll == 0 else 1 / (str1_ll * num_records)
-        prob2 = float('inf') if str2_ll == 0 else 1 / (str2_ll * num_records)
+        prob1 = 0 if str1_ll == 0 else 1 / (str1_ll * num_records)
+        prob2 = 0 if str2_ll == 0 else 1 / (str2_ll * num_records)
     except ZeroDivisionError:
-        prob1 = prob2 = float('inf')  # Assign infinity if division by zero occurs
+        prob1 = prob2 = 0  
     except Exception as e:
         print(f"Error during probability calculation: {e}")
         prob1 = prob2 = None

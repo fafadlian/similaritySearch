@@ -120,11 +120,10 @@ def perform_similarity_search(firstname, surname, name, iata_o, lat_o, lon_o, ci
     similarity_df.reset_index(inplace=True)
     similarity_df.rename(columns={'index': 'unique_id'}, inplace=True)
 
-    test = similarity_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'AddressSimilarity', 'unique_id'], errors='ignore')
+    test = similarity_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'strAddressSimilarity', 'unique_id'], errors='ignore')
     model = joblib.load(model_path)
     predictions = model.predict(test)
     df['predictions'] = predictions
-    similarity_df['predictions'] = predictions
     result_df = pd.merge(df, similarity_df, on='unique_id', how='inner')
     nameThreshold = float(nameThreshold) if nameThreshold else 0
     ageThreshold = float(ageThreshold) if ageThreshold else 0
@@ -134,6 +133,8 @@ def perform_similarity_search(firstname, surname, name, iata_o, lat_o, lon_o, ci
                         (result_df['SNSimilarity'] >= nameThreshold) &
                         (result_df['AgeSimilarity'] >= ageThreshold)
                         ]
+    filtered_result_df.to_csv('test/filtered_resilt_df.csv')
+    filtered_result_df.sort_values(by = ['predictions'], ascending = False, inplace = True)
     return filtered_result_df
 
 def parse_xml(file_path):

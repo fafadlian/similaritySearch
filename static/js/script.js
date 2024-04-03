@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', function () {
     //Populating dropdowns
     populateNationalityDropdown();
 
+    const displayedColumns = ['predictions', 'Name', 'DOB', 'Sex', 'Nationality','Travel Doc Number', 'BookingID', 'FilePath']; // Directly displayed columns
+    const hoverColumns = ['FNSimilarity','SNSimilarity','AgeSimilarity', 'DOBSimilarity', 'strAddressSimilarity', 'natMatch', 'sexMatch', 'originSimilarity', 'destinationSimilarity', 'predictions']; // Columns to display on hover
+    var globalResponseData = [];  // Global variable to store the response data
+
+
     //Highlighting Section
      // Identify the current section here. This is a placeholder example.
      var currentSection = "similaritySearchSection"; // Change this based on actual logic or URL
@@ -96,8 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.log("Name Threshold: ", nameThreshold);
         // console.log("Age Threshold: ", ageThreshold);
         // console.log("Location Threshold: ", locationThreshold);
-    
+        console.log("Query is There")
         sendRequest('/perform_similarity_search', { query: query }, function(response) {
+            console.log("sendRequest is Running")
             console.log("Response data:", response)
             if (response && response.data) {
                 console.log("Search successful:", response.message);
@@ -108,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             
         });
+        console.log("sendRequest finished")
     });
 
 
@@ -158,67 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
         link.click();
     });
     
-
-    // document.getElementById('downloadJson').addEventListener('click', function() {
-    //     var now = new Date();
-    //     var dateTimeString = now.toISOString().replace(/[^0-9]/g, ''); // Creates a string in the format 'YYYYMMDDTHHMMSS'
-    //     var flightParam = lastParam;
-    //     var searchQuery = lastSearchQuery;
-    //     var data = globalResponseData;
-    //     var jsonData = {
-    //         "PNR_Timeframe": {
-    //             "arrivalDateFrom": flightParam.arrivalDateFrom, // Example data, replace with actual data
-    //             "arrivalDateTo": flightParam.arrivalDateTo,
-    //         },
-    //         "searchedIndividual": {
-    //             "FirstName": searchQuery.firstName,
-    //             "Surname": searchQuery.surname,
-    //             "EstAge":searchQuery.age,
-    //             "originIATA":searchQuery.iata_o,
-    //             "destinationIATA":searchQuery.iata_d,
-    //             "cityAddress":searchQuery.city_name
-    //         },
-    //         "thresholds":{
-    //             "nameSimilarityThreshold": searchQuery.nameThreshold,
-    //             "ageSimilarityThreshold": searchQuery.ageThreshold,
-    //             "location Similarity Threshold": searchQuery.locationThreshold,
-    //         },
-    //         "results":{},
-    //     };
-    
-    //        // Iterate over each item in the data array and convert it to a JSON object
-    //     data.forEach(function(item, index) {
-    //         var resultID = "resultID" + index; // Construct the result ID
-    //         jsonData.results[resultID] = { // Use the result ID as a key
-    //             "similarityScores": {
-    //                 "compoundSimilarity": item[20],
-    //                 "nameSimilarity": item[15],
-    //                 "ageSimilarity": item[19],
-    //                 "originSimilarity": item[16],
-    //                 "destinationSimilarity": item[17],
-    //                 "cityDistanceSimilarity": item[18],
-    //             },
-    //             "bookInfo": {
-    //                 "FilePath": item[0],
-    //                 "bookingID": item[1],
-    //                 "originIATA": item[3],
-    //                 "originLat": item[4],
-    //                 "originLon": item[5],
-    //                 "destinationIATA": item[6],
-    //                 "destinationLat": item[7],
-    //                 "destinationLon": item[8],
-    //             },
-    //             "passengerInfo": {
-    //                 "fullName": item[2],
-    //                 "DOB": item[9],
-    //                 "Nationality": item[13],
-    //                 "Sex": item[14],
-    //             }
-    //         };
-    //     });
-
-        
-    
     //     // Convert the structured data to a JSON string
     //     var jsonString = JSON.stringify(jsonData, null, 2); // Beautify the JSON output
 
@@ -250,18 +196,23 @@ document.addEventListener('DOMContentLoaded', function () {
         var dateTimeString = new Date().toISOString().replace(/[^0-9]/g, '');
         var searchQuery = lastSearchQuery;
         var data = globalResponseData; // Assuming this is an array of objects
+        console.log("Print globalResponseData", globalResponseData)
+        console.log("Print data", data)
         var jsonData = {
             "PNR_Timeframe": {
                 "arrivalDateFrom": searchQuery.arrivalDateFrom,
                 "arrivalDateTo": searchQuery.arrivalDateTo,
             },
             "searchedIndividual": {
-                "FirstName": searchQuery.firstName,
+                "FirstName": searchQuery.firstname,
                 "Surname": searchQuery.surname,
-                "EstAge": searchQuery.age,
+                "DOB": searchQuery.dob,
                 "originIATA": searchQuery.iata_o,
                 "destinationIATA": searchQuery.iata_d,
-                "cityAddress": searchQuery.city_name
+                "cityAddress": searchQuery.city_name,
+                "Address": searchQuery.address,
+                "Nationality": searchQuery.nationality,
+                "Sex":searchQuery.sex
             },
             "thresholds": {
                 "nameSimilarityThreshold": searchQuery.nameThreshold,
@@ -296,9 +247,12 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.setRequestHeader('Content-Type', 'application/json');
     
         xhr.onload = function () {
+            console.log("XHR Load Event Triggered");
+            console.log("XHR onload triggered", xhr.status);
+            console.log("Raw response text:", xhr.responseText);
             if (xhr.status === 200) {
                 try {
-                    var response = JSON.parse(xhr.responseText);
+                    var response = preprocessAndParseJSON(xhr.responseText);
                     // After processing the response, hide the loading indicator
                     callback(response, () => {
                         document.getElementById('loadingIndicator').style.display = 'none';
@@ -345,89 +299,122 @@ document.addEventListener('DOMContentLoaded', function () {
             hideLoadingIndicator();
         });
     }
-    
-
-
-    var globalResponseData = [];  // Global variable to store the response data
-
-    // Old Version
-    // function displayResults(response) {
-    //     globalResponseData = response.data;
-    //     var resultsDiv = document.getElementById('searchResults');
-    //     resultsDiv.innerHTML = ''; // Clear previous results
-    
-    //     // Create a table
-    //     var table = document.createElement('table');
-    //     table.className = 'table'; // If you're using Bootstrap or similar CSS framework
-    
-    //     // Add table header
-    //     var thead = table.createTHead();
-    //     var headerRow = thead.insertRow();
-    //     var headers = ["File Path", "Booking ID", "Full Name", "Origin IATA", "Origin Lat", "Origin Lon", "Destination IATA", "Destination Lat", "Destination Lon", "DOB", "City Name", "City Lat", "City Lon", "Nationality", "Sex", "Name Similarity Score", "Origin Similarity", "Destination Similarity", "Address Similarity", "Age Similariity", "Compund Similarity Score"];
-    //     var headers = ["File Path", "Full Name", "DOB", "City Name", "Nationality"];
-    //     headers.forEach(headerText => {
-    //         var header = document.createElement("th");
-    //         header.textContent = headerText;
-    //         headerRow.appendChild(header);
-    //     });
-    
-    //     // Add table body
-    //     var tbody = table.createTBody();
-    //     response.data.forEach(item => {
-    //         var row = tbody.insertRow();
-    
-    //         // Assuming the order of values in 'item' matches the columns
-    //         item.forEach((value, index) => {
-    //             var cell = row.insertCell();
-    //             cell.textContent = value; // This will set each value in the order they appear in 'item'
-    //         });
-    //     });
-    
-    //     resultsDiv.appendChild(table);
-    // }
 
     function displayResults(response) {
-        console.log("Response data:", response);
+        console.log("Response data:", response.data);
+        globalResponseData = response.data;
         var resultsDiv = document.getElementById('searchResults');
         resultsDiv.innerHTML = ''; // Clear previous results
     
         if (response.data && response.data.length > 0) {
-            // Create a table
             var table = document.createElement('table');
-            table.className = 'table table-striped'; // Assuming Bootstrap
+            table.className = 'table table-striped';
     
-            // Create header
+            // Header for displayed columns
             var thead = document.createElement('thead');
-            var tr = document.createElement('tr');
-            Object.keys(response.data[0]).forEach(function(key) {
+            var headerRow = document.createElement('tr');
+            displayedColumns.forEach(columnName => {
                 var th = document.createElement('th');
-                th.textContent = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before capital letters and trim
-                tr.appendChild(th);
+                th.textContent = columnName;
+                headerRow.appendChild(th);
             });
-            thead.appendChild(tr);
+    
+            // Header cell for "Actions"
+            var actionTh = document.createElement('th');
+            actionTh.textContent = "Actions";
+            headerRow.appendChild(actionTh);
+            thead.appendChild(headerRow);
             table.appendChild(thead);
     
-            // Create body
+            // Body with clickable details
             var tbody = document.createElement('tbody');
-            response.data.forEach(function(item) {
-                var tr = document.createElement('tr');
-                Object.values(item).forEach(function(value) {
+            response.data.forEach((item, index) => {
+                var row = document.createElement('tr');
+                displayedColumns.forEach(columnName => {
                     var td = document.createElement('td');
-                    td.textContent = value;
-                    tr.appendChild(td);
+                    td.textContent = item[columnName];
+                    row.appendChild(td);
                 });
-                tbody.appendChild(tr);
+    
+                // Cell with a "View More" button to toggle additional details
+                var toggleDetailsTd = document.createElement('td');
+                var toggleDetailsBtn = document.createElement('button');
+                toggleDetailsBtn.textContent = "View More";
+                toggleDetailsBtn.className = 'btn btn-info btn-sm';
+                toggleDetailsBtn.onclick = function() {
+                    var detailsRow = document.getElementById(`details-${index}`);
+                    detailsRow.style.display = detailsRow.style.display === 'none' ? '' : 'none';
+                };
+                toggleDetailsTd.appendChild(toggleDetailsBtn);
+                row.appendChild(toggleDetailsTd);
+                tbody.appendChild(row);
+    
+                // Create a hidden row for additional details
+                var detailsRow = document.createElement('tr');
+                detailsRow.style.display = 'none'; // Initially hidden
+                detailsRow.id = `details-${index}`;
+    
+                var detailsCell = document.createElement('td');
+                detailsCell.colSpan = displayedColumns.length + 1;
+    
+                var miniTable = document.createElement('table');
+                miniTable.className = 'table table-hover'; // Bootstrap styles
+    
+                var miniThead = document.createElement('thead');
+                var miniHeaderRow = document.createElement('tr');
+                hoverColumns.forEach(columnName => {
+                    var miniTh = document.createElement('th');
+                    miniTh.textContent = columnName;
+                    miniHeaderRow.appendChild(miniTh);
+                });
+                miniThead.appendChild(miniHeaderRow);
+                miniTable.appendChild(miniThead);
+    
+                var miniTbody = document.createElement('tbody');
+                var miniBodyRow = document.createElement('tr');
+                hoverColumns.forEach(columnName => {
+                    var miniTd = document.createElement('td');
+                    miniTd.textContent = item[columnName];
+                    miniBodyRow.appendChild(miniTd);
+                });
+                miniTbody.appendChild(miniBodyRow);
+                miniTable.appendChild(miniTbody);
+    
+                detailsCell.appendChild(miniTable);
+                detailsRow.appendChild(detailsCell);
+    
+                tbody.appendChild(detailsRow); // Append the details row right after the main row
             });
             table.appendChild(tbody);
-    
             resultsDiv.appendChild(table);
         } else {
             resultsDiv.textContent = 'No similar passengers found.';
         }
-
-        // Hide the loading indicator after processing the response
-        hideLoadingIndicator();
+    
+        // Function to hide the loading indicator (if applicable)
+        hideLoadingIndicator(); // Ensure this function is defined elsewhere or remove this line if not needed
     }
+    
+    
+    
+    
+
+    function safeJSONParse(text) {
+        return JSON.parse(text, (key, value) => {
+            if (typeof value === 'string' && value === 'NaN') return NaN;
+            return value;
+        });
+    }
+
+    function preprocessAndParseJSON(responseText) {
+        // Replace occurrences of NaN with null in the response text
+        // Ensure the replacement is safe and won't affect actual string values that might coincidentally contain "NaN"
+        const safeResponseText = responseText.replace(/:\s*NaN\b/g, ": null");
+        
+        // Now parse the modified response text as JSON
+        return JSON.parse(safeResponseText);
+    }
+
 
     function setupNavigation() {
         const navLinks = document.querySelectorAll('.nav-link-container .nav-link');
