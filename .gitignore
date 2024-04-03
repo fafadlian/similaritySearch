@@ -1,7 +1,7 @@
 # Ignore all .env, pycache, and DS_Store files
 .env*
 *.pyc
-.DS_Store
+**/.DS_Store
 
 
 # Ignore specific files
