@@ -30,7 +30,7 @@ def submit_param():
         flight_number = data.get('flightNbr')
 
         api_url = 'https://tenacity-rmt.eurodyn.com/api/datalist/flights'
-        access_token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGI4M2U5OS1mZWE2LTRjMzItYjNlNi1iOWE0ODhlZjE3YjIiLCJpYXQiOjE3MDkyODg4NDksImV4cCI6MTcxMTkxNzkwNX0.O0n_a_ICZFYtaT6zK3fmKlrpmJV8FqbwSSeYSI8KJ5RFh5f5NR-usxzfnoh9yvtd7iwfK1ym6UjYKtf5TDQQiQ'
+        access_token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZTU0MTg3NC1iYTNiLTQ5M2EtOGZkYy0xYjgwMGI5YWMxMjYiLCJpYXQiOjE3MTIxNzc4NTAsImV4cCI6MTcxNDgwNjkwNn0.MPAnYjHbS4KnU8UMw0SaGJ4Egi8zclmDfFmhLTv8DKu0TzYcWbmT2-ZpWtdLJoue-ugvHi8ibWX0IRLGfdV6QQ'
         params = {
             'ft_flight_leg_arrival_date_time_from': arrival_date_from,
             'ft_flight_leg_arrival_date_time_to': arrival_date_to,
@@ -113,7 +113,8 @@ def handle_similarity_search():
     response = jsonify(response_data)
     return response
 
-if __name__ == '__main__':
-    # app.run(debug=False)
-    app.run(debug=True, port=5002)
-    #change debug=True for debug
+# if __name__ == '__main__':
+#     # app.run(debug=False)
+#     # app.run(debug=True, port=5002)
+#     app.run(debug=False, host='0.0.0.0', port=5002)
+#     #change debug=True for debug

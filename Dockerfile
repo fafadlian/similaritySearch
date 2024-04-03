@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the Python script files
-COPY app.py api_client.py similarity_search.py distanceSimilarity.py ageSimilarity.py loc_access.py data_loader.py ./
+COPY app.py api_client.py similarity_search.py distanceSimilarity.py ageSimilarity.py base_similarity.py loc_access.py locationSimilarity.py data_loader.py ./
 
 # Copy the folders with their contents
 COPY jsonData/ jsonData/
@@ -13,6 +13,7 @@ COPY XMLs/ XMLs/
 COPY templates/ templates/
 COPY static/ static/
 COPY data/ data/
+COPY model/ model/
 
 # Install any needed packages specified in requirements.txt
 COPY requirements.txt .
@@ -36,10 +37,10 @@ ENV FLASK_APP=app.py
 
 # Run app.py when the container launches
 
-#Use this for debug
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5002"]
+#Use this for debug/development
+# CMD ["flask", "run", "--host=0.0.0.0", "--port=5002"]
 
 #Use this for Production
-# CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]
+CMD ["gunicorn", "-w", "4", "app:app", "--bind", "0.0.0.0:80"]
 
 
