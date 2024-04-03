@@ -44,51 +44,9 @@ def standardize_mark(mark):
     standardized_mark = '-'.join(parts_sorted)
     return standardized_mark
 
-def string_similarity(string1, string2, string_counts, num_records):
-    # Ensure input strings are valid
-    if not isinstance(string1, str) or not isinstance(string2, str):
-        raise ValueError("Both string1 and string2 must be valid strings.")
-    
-    # Ensure string_counts is accessible and num_records is valid
-    # if not isinstance(string_counts, dict):
-    #     raise ValueError("string_counts must be a dictionary.")
-    if not isinstance(num_records, int) or num_records <= 0:
-        raise ValueError("num_records must be a positive integer.")
-    
-    # Calculate string similarity
-    try:
-        str_similarity = fuzz.ratio(string1.lower(), string2.lower())
-    except Exception as e:
-        print(f"Error calculating string similarity: {e}")
-        return None, None, None
-    
-    # Initialize default values for inverse likelihoods
-    str1_ll_inverse = str2_ll_inverse = None
-    # Attempt to calculate likelihoods, handling division by zero
-    try:
-        str1_ll = string_counts.get(string1.lower(), 0)
-        str2_ll = string_counts.get(string2.lower(), 0)
-        
-        str1_ll_inverse = float('inf') if str1_ll == 0 else 1 / str1_ll
-        str2_ll_inverse = float('inf') if str2_ll == 0 else 1 / str2_ll
-    except ZeroDivisionError:
-        print("Division by zero encountered in likelihood calculation.")
-    except Exception as e:
-        print(f"Error during likelihood calculation: {e}")
-    
-    # Calculate probabilities, handling division by zero explicitly
-    try:
-        prob1 = float('inf') if str1_ll == 0 else 1 / (str1_ll * num_records)
-        prob2 = float('inf') if str2_ll == 0 else 1 / (str2_ll * num_records)
-    except ZeroDivisionError:
-        prob1 = prob2 = float('inf')  # Assign infinity if division by zero occurs
-    except Exception as e:
-        print(f"Error during probability calculation: {e}")
-        prob1 = prob2 = None
-    
-    return pd.Series([str_similarity, string1, string2, str1_ll, str2_ll, prob1, prob2])
 
-df_obstruct1 = df.head(1000).copy()
+n = 1100
+df_obstruct1 = df.head(n).copy()
 rate = 0.3
 rate_typos = 0.2
 df_obstruct1['Sex'] = df_obstruct1.apply(introduce_error_sex, args = (0.025, ), axis = 1)
@@ -103,7 +61,7 @@ df_obstruct1['CityName'] = df_obstruct1.apply(introduce_error_nat_city, args = (
 df_obstruct1[['OriginLat', 'OriginLon', 'OriginCity', 'OriginCountry']] = df_obstruct1.apply(update_loc_airport, args = ('OriginIATA', ), axis = 1)
 df_obstruct1[['DestinationLat', 'DestinationLon', 'DestinationCity', 'DestinationCountry']] = df_obstruct1.apply(update_loc_airport, args = ('DestinationIATA', ), axis = 1)
 
-df_obstruct2 = df.head(1100).copy()
+df_obstruct2 = df.head(n).copy()
 rate = 0.5
 rate_typos = 0.3
 df_obstruct2['Sex'] = df_obstruct2.apply(introduce_error_sex, args = (0.05, ), axis = 1)
@@ -118,7 +76,7 @@ df_obstruct2['CityName'] = df_obstruct2.apply(introduce_error_nat_city, args = (
 df_obstruct2[['OriginLat', 'OriginLon', 'OriginCity', 'OriginCountry']] = df_obstruct2.apply(update_loc_airport, args = ('OriginIATA', ), axis = 1)
 df_obstruct2[['DestinationLat', 'DestinationLon', 'DestinationCity', 'DestinationCountry']] = df_obstruct2.apply(update_loc_airport, args = ('DestinationIATA', ), axis = 1)
 
-df_obstruct3 = df.head(1100).copy()
+df_obstruct3 = df.head(n).copy()
 rate = 0.7
 rate_typos = 0.4
 df_obstruct3['Sex'] = df_obstruct3.apply(introduce_error_sex, args = (0.1, ), axis = 1)
@@ -133,7 +91,7 @@ df_obstruct3['CityName'] = df_obstruct3.apply(introduce_error_nat_city, args = (
 df_obstruct3[['OriginLat', 'OriginLon', 'OriginCity', 'OriginCountry']] = df_obstruct3.apply(update_loc_airport, args = ('OriginIATA', ), axis = 1)
 df_obstruct3[['DestinationLat', 'DestinationLon', 'DestinationCity', 'DestinationCountry']] = df_obstruct3.apply(update_loc_airport, args = ('DestinationIATA', ), axis = 1)
 
-df_true = df.head(1100).copy()
+df_true = df.head(n).copy()
 df_true['Mark'] = 'True'
 df_obstruct1['Mark'] = 'Obs1'
 df_obstruct2['Mark'] = 'Obs2'
@@ -147,6 +105,7 @@ df_appended.shape
 df_appended1 = df_appended.copy()
 df_appended1['key'] = 1
 
+
 ddf_ap1 = dd.from_pandas(df_appended1, npartitions=50)
 ddf_ap2 = dd.from_pandas(df_appended1, npartitions=50)
 
@@ -154,23 +113,41 @@ cartesian_ddf = dd.merge(ddf_ap1, ddf_ap2, on='key').drop('key', axis=1)
 cartesian_df = cartesian_ddf.compute()
 
 
+
 cartesian_similarity_df = pd.DataFrame()
 num_records = df_appended.shape[0]
 max_distance = 20000
 
-gender_counts = df_appended['Sex'].str.lower().value_counts(normalize=True)
-origin_airport_counts = df_appended['OriginIATA'].str.lower().value_counts(normalize=True)
-origin_city_counts = df_appended['OriginCity'].str.lower().value_counts(normalize=True)
-origin_country_counts = df_appended['OriginCountry'].str.lower().value_counts(normalize=True)
-destination_airport_counts = df_appended['DestinationIATA'].str.lower().value_counts(normalize=True)
-destination_city_counts = df_appended['DestinationCity'].str.lower().value_counts(normalize=True)
-destination_country_counts = df_appended['DestinationCountry'].str.lower().value_counts(normalize=True)
-city_address_counts = df_appended['CityName'].str.lower().value_counts(normalize=True)
-country_address_counts = df_appended['Country of Address'].str.lower().value_counts(normalize=True)
-nationality_counts = df_appended['Nationality'].str.lower().value_counts(normalize=True)
-DOB_counts = df_appended['DOB'].value_counts(normalize=True)
-firstname_counts = df_appended['Firstname'].str.lower().value_counts(normalize=True)
-surname_counts = df_appended['Surname'].str.lower().value_counts(normalize=True)
+
+# Original
+# gender_counts = df_appended['Sex'].str.lower().value_counts(normalize=True)
+# origin_airport_counts = df_appended['OriginIATA'].str.lower().value_counts(normalize=True)
+# origin_city_counts = df_appended['OriginCity'].str.lower().value_counts(normalize=True)
+# origin_country_counts = df_appended['OriginCountry'].str.lower().value_counts(normalize=True)
+# destination_airport_counts = df_appended['DestinationIATA'].str.lower().value_counts(normalize=True)
+# destination_city_counts = df_appended['DestinationCity'].str.lower().value_counts(normalize=True)
+# destination_country_counts = df_appended['DestinationCountry'].str.lower().value_counts(normalize=True)
+# city_address_counts = df_appended['CityName'].str.lower().value_counts(normalize=True)
+# country_address_counts = df_appended['Country of Address'].str.lower().value_counts(normalize=True)
+# nationality_counts = df_appended['Nationality'].str.lower().value_counts(normalize=True)
+# DOB_counts = df_appended['DOB'].value_counts(normalize=True)
+# firstname_counts = df_appended['Firstname'].str.lower().value_counts(normalize=True)
+# surname_counts = df_appended['Surname'].str.lower().value_counts(normalize=True)
+
+# First Change
+gender_counts = df_true['Sex'].str.lower().value_counts(normalize=True)
+origin_airport_counts = df_true['OriginIATA'].str.lower().value_counts(normalize=True)
+origin_city_counts = df_true['OriginCity'].str.lower().value_counts(normalize=True)
+origin_country_counts = df_true['OriginCountry'].str.lower().value_counts(normalize=True)
+destination_airport_counts = df_true['DestinationIATA'].str.lower().value_counts(normalize=True)
+destination_city_counts = df_true['DestinationCity'].str.lower().value_counts(normalize=True)
+destination_country_counts = df_true['DestinationCountry'].str.lower().value_counts(normalize=True)
+city_address_counts = df_true['CityName'].str.lower().value_counts(normalize=True)
+country_address_counts = df_true['Country of Address'].str.lower().value_counts(normalize=True)
+nationality_counts = df_true['Nationality'].str.lower().value_counts(normalize=True)
+DOB_counts = df_true['DOB'].value_counts(normalize=True)
+firstname_counts = df_true['Firstname'].str.lower().value_counts(normalize=True)
+surname_counts = df_true['Surname'].str.lower().value_counts(normalize=True)
 
 
 # String similarity for first names
@@ -249,6 +226,7 @@ cartesian_similarity_df['Class'] = cartesian_df.apply(lambda row: 1 if row['Trav
 cartesian_similarity_df['Mark'] = cartesian_df['Mark_x'] + "-" + cartesian_df['Mark_y']
 cartesian_similarity_df['StandardizedMark'] = cartesian_similarity_df['Mark'].apply(standardize_mark)
 print(cartesian_similarity_df['StandardizedMark'].unique())
+# cartesian_similarity_df.to_csv('test/cartesian_similarity_df.csv')
 
 
 

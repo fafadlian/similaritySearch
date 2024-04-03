@@ -26,7 +26,7 @@ def run_xgboost_classification_v2(cartesian_similarity_df, test_mark=None, inclu
     # Split the dataset
     if include_all_for_train_test:
         # Use all data for both training and testing
-        X = cartesian_similarity_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'AddressSimilarity'], errors='ignore')
+        X = cartesian_similarity_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'strAddressSimilarity'], errors='ignore')
         y = cartesian_similarity_df['Class']
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
 
@@ -35,9 +35,9 @@ def run_xgboost_classification_v2(cartesian_similarity_df, test_mark=None, inclu
         test_df = cartesian_similarity_df[cartesian_similarity_df['StandardizedMark'] == test_mark]
         train_df = cartesian_similarity_df[cartesian_similarity_df['StandardizedMark'] != test_mark]
         
-        X_train = train_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'AddressSimilarity'], errors='ignore')
+        X_train = train_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'strAddressSimilarity'], errors='ignore')
         y_train = train_df['Class']
-        X_test = test_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'AddressSimilarity'], errors='ignore')
+        X_test = test_df.select_dtypes(exclude=['object', 'string']).drop(columns=['Class', 'Mark', 'DOBSimilarity', 'strAddressSimilarity'], errors='ignore')
         y_test = test_df['Class']
     
     # Initialize and fit the model
