@@ -54,7 +54,8 @@ Feel free to adjust the thresholds and see how the threshold affect the output.
 
 ## Features
 - **Data Similarity Searches**: Perform searches based on multiple similarity criteria.
-- **Adjustable Sensitivity (Threshold)**: Utilizes custom threshold for the similarity score
+- **Adjustable Sensitivity (Threshold)**: Utilizes custom threshold for the similarity score.
+- **Machine Learning Recommendation**: Utilise machine learing algorithm to assist user for the similarity search.
 - **Interactive Web Interface**: Easy-to-use web interface for all user interactions.
 
 ## Contributing
