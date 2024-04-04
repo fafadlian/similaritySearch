@@ -42,11 +42,11 @@ This test case will try to search Jaime Smith that travels from Dubai(DXB) to Am
 
 
 ### Test Case B
-We're looking someone with the name of Mike Smith. travels from somewhere in london to CDG Paris. He lives in London at 579 Pamela Mtn Suite 238 Luiston Lake, D.C 66853.
-However, his DOB was not clearly typed whether 15 January 1965 or 16 January 1966. He's a Taiwanese.
-Note: You can choose from one of the airport in london (STN, LTN, LGW, LHR).
-Clue: Since the name of "Mike" often the short version of "Michael", we can use a lower name threshold (40). 
-Since we have an almost complete information of his locations, we can use a higher threshold value (95)
+We're looking someone with the name of **Mike Smith**. travels from somewhere in **London** to **CDG Paris**. He lives in **London** at **579 Pamela Mtn Suite 238 Luiston Lake, D.C 66853**.
+However, his DOB was not clearly typed whether **15 January 1965** or **16 January 1966**. He's a Taiwanese.
+Note: You can choose from one of the airport in London (STN, LTN, LGW, LHR).
+Clue: Since the name of "Mike" often the short version of "Michael", we can use a lower name threshold (**40**). 
+Since we have an almost complete information of his locations, we can use a higher threshold value (**95**)
 
 Feel free to adjust the thresholds and see how the threshold affect the output. 
 
