@@ -2,10 +2,15 @@
 .env*
 *.pyc
 **/.DS_Store
+.npy*
+.model*
 
 
 # Ignore specific files
 .DS_Store
 Thumbs.db
 
+
 # Ignore directories
+/data/
+/test_results/
